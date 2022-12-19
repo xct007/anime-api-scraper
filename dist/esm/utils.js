@@ -1,79 +1,49 @@
 import axios from "axios";
-const API_URL = "https://pencarinafkah.xyz/com.animeku.animechannelsubindoandsubenglish";
-const API_LATEST = async (page, limit) => {
-    const Data = await keyApi();
-    if (Data) {
-        return `${Data.baseUrl}/api/get_videos?page=${page}&count=${limit}&api_key=${Data.apikey}`;
+import https from "https";
+const BASE_URL = "https://wibuid.com";
+const APIKEY = "cda11bx8aITlKsXCpNB7y" + "VLnOdEGqg342ZFrQzJRetkSoUMi9w";
+/** */
+const isValidLang = (str) => {
+    let valid;
+    if ((str && str.toLowerCase() == "id") ||
+        str.toLowerCase() == "indo" ||
+        str.toLowerCase() == "indonesia") {
+        valid = "id";
+    }
+    else if ((str && str.toLowerCase() == "en") ||
+        str.toLowerCase() == "english" ||
+        str.toLowerCase() == "inggris") {
+        valid = "gb";
     }
     else {
-        return false;
+        valid = "id";
     }
+    return valid;
 };
-const API_SEARCH = async () => {
-    const Data = await keyApi();
-    if (Data) {
-        return `${Data.baseUrl}/api/get_category_genre?search=&sort=c.category_name%20ASC&api_key=${Data.apikey}`;
-    }
-    else {
-        return false;
-    }
+/**
+ * @note {BASE_URL} or all endpoint bellow might be changed by the owner (?)
+ */
+/** @p get_search_results */
+export const API_SEARCH = (query, lang) => `${BASE_URL}/api/get_search_results?search=${query}&count=100&lang=${isValidLang(lang)}&api_key=${APIKEY}`;
+/** @p get_ongoing_index */
+export const API_ONGOING = (lang) => `${BASE_URL}/api/get_ongoing_index?page=1&count=40&lang=${isValidLang(lang)}&api_key=${APIKEY}`;
+/** @p get_popular_index */
+export const API_POPULAR = (lang) => `${BASE_URL}/api/get_popular_index?page=1&count=40&lang=${isValidLang(lang)}&api_key=${APIKEY}`;
+/** @p get_category_posts */
+export const API_POSTS = (id) => `${BASE_URL}/api/get_category_posts?id=${id}?page=1&count=40&api_key=${APIKEY}`;
+/** @p get_post_detail_secure */
+export const API_POST_DETAIL = (id) => `${BASE_URL}/api/get_post_detail_secure?api_key=${APIKEY}&id=${id}`;
+/** @p get_post_detail_video */
+export const API_VIDEO_ID = (id) => `${BASE_URL}/api/get_post_detail_video?api_key=${APIKEY}&video_id=${id}&page_id=4`;
+export const Config = {
+    headers: {
+        "Data-Agent": "The Stream",
+        "Accept-Encoding": "gzip",
+        "User-Agent": "okhttp/4.9.1",
+    },
 };
-const API_POST = async (vid) => {
-    const Data = await keyApi();
-    if (Data) {
-        return `${Data.baseUrl}/api/get_post_detail?id=${vid}`;
-    }
-    else {
-        return false;
-    }
-};
-const API_VIDEOS = async (id) => {
-    const Data = await keyApi();
-    if (Data) {
-        return `${Data.baseUrl}/api/get_category_videos?id=${id}&page=1&count=1200&sort=n.id%20DESC&api_key=${Data.apikey}`;
-    }
-    else {
-        return false;
-    }
-};
-async function keyApi() {
-    const { data } = await axios.get(API_URL, {
-        headers: {
-            "User-Agent": "Dalvik/2.1.0 (Linux; U; Android 12; M2007J20CG Build/SKQ1.211019)",
-        },
-    });
-    if (data) {
-        const isOk = data === null || data === void 0 ? void 0 : data.Iklan[0];
-        if (isOk.status == "ok") {
-            return {
-                status: true,
-                baseUrl: isOk.webbase,
-                api_yt: isOk.api_yt,
-                apikey: isOk.apikey,
-            };
-        }
-        else {
-            return {
-                status: false,
-            };
-        }
-    }
-    else {
-        return {
-            status: false,
-        };
-    }
-}
-const FetchData = async (url) => {
-    const { data } = await axios.get(`${url}`, {
-        headers: {
-            //"Data-Agent": "Your Videos Channel",
-            "User-Agent": "Dalvik/7.1.12.1.0 (com.animeku.animechannelsubindoandsubenglish U; Android ; 20175 Build/NMF260)",
-            //"Accept": "application/vnd.yourapi.v1.full+json",
-            "Accept-Encoding": " ",
-        },
-    });
-    return data;
-};
-export { API_LATEST, API_SEARCH, API_VIDEOS, API_POST, FetchData };
+/* Make Keep-Alive Request */
+export const Axios = axios.create({
+    httpsAgent: new https.Agent({ keepAlive: true }),
+});
 //# sourceMappingURL=utils.js.map

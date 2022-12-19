@@ -3,87 +3,59 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.FetchData = exports.API_POST = exports.API_VIDEOS = exports.API_SEARCH = exports.API_LATEST = void 0;
+exports.Axios = exports.Config = exports.API_VIDEO_ID = exports.API_POST_DETAIL = exports.API_POSTS = exports.API_POPULAR = exports.API_ONGOING = exports.API_SEARCH = void 0;
 const axios_1 = __importDefault(require("axios"));
-const API_URL = "https://pencarinafkah.xyz/com.animeku.animechannelsubindoandsubenglish";
-const API_LATEST = async (page, limit) => {
-    const Data = await keyApi();
-    if (Data) {
-        return `${Data.baseUrl}/api/get_videos?page=${page}&count=${limit}&api_key=${Data.apikey}`;
+const https_1 = __importDefault(require("https"));
+const BASE_URL = "https://wibuid.com";
+const APIKEY = "cda11bx8aITlKsXCpNB7y" + "VLnOdEGqg342ZFrQzJRetkSoUMi9w";
+/** */
+const isValidLang = (str) => {
+    let valid;
+    if ((str && str.toLowerCase() == "id") ||
+        str.toLowerCase() == "indo" ||
+        str.toLowerCase() == "indonesia") {
+        valid = "id";
+    }
+    else if ((str && str.toLowerCase() == "en") ||
+        str.toLowerCase() == "english" ||
+        str.toLowerCase() == "inggris") {
+        valid = "gb";
     }
     else {
-        return false;
+        valid = "id";
     }
+    return valid;
 };
-exports.API_LATEST = API_LATEST;
-const API_SEARCH = async () => {
-    const Data = await keyApi();
-    if (Data) {
-        return `${Data.baseUrl}/api/get_category_genre?search=&sort=c.category_name%20ASC&api_key=${Data.apikey}`;
-    }
-    else {
-        return false;
-    }
-};
+/**
+ * @note {BASE_URL} or all endpoint bellow might be changed by the owner (?)
+ */
+/** @p get_search_results */
+const API_SEARCH = (query, lang) => `${BASE_URL}/api/get_search_results?search=${query}&count=100&lang=${isValidLang(lang)}&api_key=${APIKEY}`;
 exports.API_SEARCH = API_SEARCH;
-const API_POST = async (vid) => {
-    const Data = await keyApi();
-    if (Data) {
-        return `${Data.baseUrl}/api/get_post_detail?id=${vid}`;
-    }
-    else {
-        return false;
-    }
+/** @p get_ongoing_index */
+const API_ONGOING = (lang) => `${BASE_URL}/api/get_ongoing_index?page=1&count=40&lang=${isValidLang(lang)}&api_key=${APIKEY}`;
+exports.API_ONGOING = API_ONGOING;
+/** @p get_popular_index */
+const API_POPULAR = (lang) => `${BASE_URL}/api/get_popular_index?page=1&count=40&lang=${isValidLang(lang)}&api_key=${APIKEY}`;
+exports.API_POPULAR = API_POPULAR;
+/** @p get_category_posts */
+const API_POSTS = (id) => `${BASE_URL}/api/get_category_posts?id=${id}?page=1&count=40&api_key=${APIKEY}`;
+exports.API_POSTS = API_POSTS;
+/** @p get_post_detail_secure */
+const API_POST_DETAIL = (id) => `${BASE_URL}/api/get_post_detail_secure?api_key=${APIKEY}&id=${id}`;
+exports.API_POST_DETAIL = API_POST_DETAIL;
+/** @p get_post_detail_video */
+const API_VIDEO_ID = (id) => `${BASE_URL}/api/get_post_detail_video?api_key=${APIKEY}&video_id=${id}&page_id=4`;
+exports.API_VIDEO_ID = API_VIDEO_ID;
+exports.Config = {
+    headers: {
+        "Data-Agent": "The Stream",
+        "Accept-Encoding": "gzip",
+        "User-Agent": "okhttp/4.9.1",
+    },
 };
-exports.API_POST = API_POST;
-const API_VIDEOS = async (id) => {
-    const Data = await keyApi();
-    if (Data) {
-        return `${Data.baseUrl}/api/get_category_videos?id=${id}&page=1&count=1200&sort=n.id%20DESC&api_key=${Data.apikey}`;
-    }
-    else {
-        return false;
-    }
-};
-exports.API_VIDEOS = API_VIDEOS;
-async function keyApi() {
-    const { data } = await axios_1.default.get(API_URL, {
-        headers: {
-            "User-Agent": "Dalvik/2.1.0 (Linux; U; Android 12; M2007J20CG Build/SKQ1.211019)",
-        },
-    });
-    if (data) {
-        const isOk = data === null || data === void 0 ? void 0 : data.Iklan[0];
-        if (isOk.status == "ok") {
-            return {
-                status: true,
-                baseUrl: isOk.webbase,
-                api_yt: isOk.api_yt,
-                apikey: isOk.apikey,
-            };
-        }
-        else {
-            return {
-                status: false,
-            };
-        }
-    }
-    else {
-        return {
-            status: false,
-        };
-    }
-}
-const FetchData = async (url) => {
-    const { data } = await axios_1.default.get(`${url}`, {
-        headers: {
-            //"Data-Agent": "Your Videos Channel",
-            "User-Agent": "Dalvik/7.1.12.1.0 (com.animeku.animechannelsubindoandsubenglish U; Android ; 20175 Build/NMF260)",
-            //"Accept": "application/vnd.yourapi.v1.full+json",
-            "Accept-Encoding": " ",
-        },
-    });
-    return data;
-};
-exports.FetchData = FetchData;
+/* Make Keep-Alive Request */
+exports.Axios = axios_1.default.create({
+    httpsAgent: new https_1.default.Agent({ keepAlive: true }),
+});
 //# sourceMappingURL=utils.js.map
