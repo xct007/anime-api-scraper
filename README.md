@@ -3,7 +3,7 @@ anime-api-scraper is a library for getting anime data from inuNime.
 ![](https://s1.zerochan.net/Sousou.no.Frieren.600.3396169.jpg)
 ## Installation
 
-Use the package manager ```npm``` or ```yarn``` to install foobar.
+Use the package manager ```npm``` or ```yarn``` to install.
 
 ```bash
 npm install github:xct007/anime-api-scraper
